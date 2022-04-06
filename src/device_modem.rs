@@ -12,30 +12,6 @@ pub trait DeviceModem {
     fn apn(&self) -> Result<String, dbus::Error>;
 }
 
-#[derive(Debug)]
-pub struct DeviceModemPropertiesChanged {
-    pub properties: arg::PropMap,
-}
-
-impl arg::AppendAll for DeviceModemPropertiesChanged {
-    fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.properties, i);
-    }
-}
-
-impl arg::ReadAll for DeviceModemPropertiesChanged {
-    fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
-        Ok(DeviceModemPropertiesChanged {
-            properties: i.read()?,
-        })
-    }
-}
-
-impl dbus::message::SignalArgs for DeviceModemPropertiesChanged {
-    const NAME: &'static str = "PropertiesChanged";
-    const INTERFACE: &'static str = "org.freedesktop.NetworkManager.Device.Modem";
-}
-
 impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> DeviceModem for blocking::Proxy<'a, C> {
 
     fn modem_capabilities(&self) -> Result<u32, dbus::Error> {

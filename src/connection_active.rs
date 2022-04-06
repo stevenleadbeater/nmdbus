@@ -50,30 +50,6 @@ impl dbus::message::SignalArgs for ConnectionActiveStateChanged {
     const INTERFACE: &'static str = "org.freedesktop.NetworkManager.Connection.Active";
 }
 
-#[derive(Debug)]
-pub struct ConnectionActivePropertiesChanged {
-    pub properties: arg::PropMap,
-}
-
-impl arg::AppendAll for ConnectionActivePropertiesChanged {
-    fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.properties, i);
-    }
-}
-
-impl arg::ReadAll for ConnectionActivePropertiesChanged {
-    fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
-        Ok(ConnectionActivePropertiesChanged {
-            properties: i.read()?,
-        })
-    }
-}
-
-impl dbus::message::SignalArgs for ConnectionActivePropertiesChanged {
-    const NAME: &'static str = "PropertiesChanged";
-    const INTERFACE: &'static str = "org.freedesktop.NetworkManager.Connection.Active";
-}
-
 impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> ConnectionActive for blocking::Proxy<'a, C> {
 
     fn connection(&self) -> Result<dbus::Path<'static>, dbus::Error> {

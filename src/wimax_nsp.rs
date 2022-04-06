@@ -10,30 +10,6 @@ pub trait WiMaxNsp {
     fn network_type(&self) -> Result<u32, dbus::Error>;
 }
 
-#[derive(Debug)]
-pub struct WiMaxNspPropertiesChanged {
-    pub properties: arg::PropMap,
-}
-
-impl arg::AppendAll for WiMaxNspPropertiesChanged {
-    fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.properties, i);
-    }
-}
-
-impl arg::ReadAll for WiMaxNspPropertiesChanged {
-    fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
-        Ok(WiMaxNspPropertiesChanged {
-            properties: i.read()?,
-        })
-    }
-}
-
-impl dbus::message::SignalArgs for WiMaxNspPropertiesChanged {
-    const NAME: &'static str = "PropertiesChanged";
-    const INTERFACE: &'static str = "org.freedesktop.NetworkManager.WiMax.Nsp";
-}
-
 impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> WiMaxNsp for blocking::Proxy<'a, C> {
 
     fn name(&self) -> Result<String, dbus::Error> {

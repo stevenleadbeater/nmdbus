@@ -19,30 +19,6 @@ pub trait Settings {
 }
 
 #[derive(Debug)]
-pub struct SettingsPropertiesChanged {
-    pub properties: arg::PropMap,
-}
-
-impl arg::AppendAll for SettingsPropertiesChanged {
-    fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.properties, i);
-    }
-}
-
-impl arg::ReadAll for SettingsPropertiesChanged {
-    fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
-        Ok(SettingsPropertiesChanged {
-            properties: i.read()?,
-        })
-    }
-}
-
-impl dbus::message::SignalArgs for SettingsPropertiesChanged {
-    const NAME: &'static str = "PropertiesChanged";
-    const INTERFACE: &'static str = "org.freedesktop.NetworkManager.Settings";
-}
-
-#[derive(Debug)]
 pub struct SettingsNewConnection {
     pub connection: dbus::Path<'static>,
 }

@@ -11,30 +11,6 @@ pub trait DeviceMacvlan {
     fn tap(&self) -> Result<bool, dbus::Error>;
 }
 
-#[derive(Debug)]
-pub struct DeviceMacvlanPropertiesChanged {
-    pub properties: arg::PropMap,
-}
-
-impl arg::AppendAll for DeviceMacvlanPropertiesChanged {
-    fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.properties, i);
-    }
-}
-
-impl arg::ReadAll for DeviceMacvlanPropertiesChanged {
-    fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
-        Ok(DeviceMacvlanPropertiesChanged {
-            properties: i.read()?,
-        })
-    }
-}
-
-impl dbus::message::SignalArgs for DeviceMacvlanPropertiesChanged {
-    const NAME: &'static str = "PropertiesChanged";
-    const INTERFACE: &'static str = "org.freedesktop.NetworkManager.Device.Macvlan";
-}
-
 impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> DeviceMacvlan for blocking::Proxy<'a, C> {
 
     fn parent(&self) -> Result<dbus::Path<'static>, dbus::Error> {

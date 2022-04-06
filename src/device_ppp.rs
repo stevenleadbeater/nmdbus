@@ -7,29 +7,5 @@ use dbus::blocking;
 pub trait DevicePpp {
 }
 
-#[derive(Debug)]
-pub struct DevicePppPropertiesChanged {
-    pub properties: arg::PropMap,
-}
-
-impl arg::AppendAll for DevicePppPropertiesChanged {
-    fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.properties, i);
-    }
-}
-
-impl arg::ReadAll for DevicePppPropertiesChanged {
-    fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
-        Ok(DevicePppPropertiesChanged {
-            properties: i.read()?,
-        })
-    }
-}
-
-impl dbus::message::SignalArgs for DevicePppPropertiesChanged {
-    const NAME: &'static str = "PropertiesChanged";
-    const INTERFACE: &'static str = "org.freedesktop.NetworkManager.Device.Ppp";
-}
-
 impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> DevicePpp for blocking::Proxy<'a, C> {
 }

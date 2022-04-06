@@ -10,30 +10,6 @@ pub trait DeviceBluetooth {
     fn bt_capabilities(&self) -> Result<u32, dbus::Error>;
 }
 
-#[derive(Debug)]
-pub struct DeviceBluetoothPropertiesChanged {
-    pub properties: arg::PropMap,
-}
-
-impl arg::AppendAll for DeviceBluetoothPropertiesChanged {
-    fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.properties, i);
-    }
-}
-
-impl arg::ReadAll for DeviceBluetoothPropertiesChanged {
-    fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
-        Ok(DeviceBluetoothPropertiesChanged {
-            properties: i.read()?,
-        })
-    }
-}
-
-impl dbus::message::SignalArgs for DeviceBluetoothPropertiesChanged {
-    const NAME: &'static str = "PropertiesChanged";
-    const INTERFACE: &'static str = "org.freedesktop.NetworkManager.Device.Bluetooth";
-}
-
 impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> DeviceBluetooth for blocking::Proxy<'a, C> {
 
     fn hw_address(&self) -> Result<String, dbus::Error> {

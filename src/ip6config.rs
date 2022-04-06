@@ -17,30 +17,6 @@ pub trait IP6Config {
     fn dns_priority(&self) -> Result<i32, dbus::Error>;
 }
 
-#[derive(Debug)]
-pub struct IP6ConfigPropertiesChanged {
-    pub properties: arg::PropMap,
-}
-
-impl arg::AppendAll for IP6ConfigPropertiesChanged {
-    fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.properties, i);
-    }
-}
-
-impl arg::ReadAll for IP6ConfigPropertiesChanged {
-    fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
-        Ok(IP6ConfigPropertiesChanged {
-            properties: i.read()?,
-        })
-    }
-}
-
-impl dbus::message::SignalArgs for IP6ConfigPropertiesChanged {
-    const NAME: &'static str = "PropertiesChanged";
-    const INTERFACE: &'static str = "org.freedesktop.NetworkManager.IP6Config";
-}
-
 impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> IP6Config for blocking::Proxy<'a, C> {
 
     fn addresses(&self) -> Result<Vec<(Vec<u8>, u32, Vec<u8>)>, dbus::Error> {

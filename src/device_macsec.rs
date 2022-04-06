@@ -20,30 +20,6 @@ pub trait DeviceMacsec {
     fn replay_protect(&self) -> Result<bool, dbus::Error>;
 }
 
-#[derive(Debug)]
-pub struct DeviceMacsecPropertiesChanged {
-    pub properties: arg::PropMap,
-}
-
-impl arg::AppendAll for DeviceMacsecPropertiesChanged {
-    fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.properties, i);
-    }
-}
-
-impl arg::ReadAll for DeviceMacsecPropertiesChanged {
-    fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
-        Ok(DeviceMacsecPropertiesChanged {
-            properties: i.read()?,
-        })
-    }
-}
-
-impl dbus::message::SignalArgs for DeviceMacsecPropertiesChanged {
-    const NAME: &'static str = "PropertiesChanged";
-    const INTERFACE: &'static str = "org.freedesktop.NetworkManager.Device.Macsec";
-}
-
 impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> DeviceMacsec for blocking::Proxy<'a, C> {
 
     fn parent(&self) -> Result<dbus::Path<'static>, dbus::Error> {

@@ -11,30 +11,6 @@ pub trait DeviceStatistics {
     fn rx_bytes(&self) -> Result<u64, dbus::Error>;
 }
 
-#[derive(Debug)]
-pub struct DeviceStatisticsPropertiesChanged {
-    pub properties: arg::PropMap,
-}
-
-impl arg::AppendAll for DeviceStatisticsPropertiesChanged {
-    fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.properties, i);
-    }
-}
-
-impl arg::ReadAll for DeviceStatisticsPropertiesChanged {
-    fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
-        Ok(DeviceStatisticsPropertiesChanged {
-            properties: i.read()?,
-        })
-    }
-}
-
-impl dbus::message::SignalArgs for DeviceStatisticsPropertiesChanged {
-    const NAME: &'static str = "PropertiesChanged";
-    const INTERFACE: &'static str = "org.freedesktop.NetworkManager.Device.Statistics";
-}
-
 impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> DeviceStatistics for blocking::Proxy<'a, C> {
 
     fn refresh_rate_ms(&self) -> Result<u32, dbus::Error> {

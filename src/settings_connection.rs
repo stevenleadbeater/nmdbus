@@ -60,30 +60,6 @@ impl dbus::message::SignalArgs for SettingsConnectionRemoved {
     const INTERFACE: &'static str = "org.freedesktop.NetworkManager.Settings.Connection";
 }
 
-#[derive(Debug)]
-pub struct SettingsConnectionPropertiesChanged {
-    pub properties: arg::PropMap,
-}
-
-impl arg::AppendAll for SettingsConnectionPropertiesChanged {
-    fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.properties, i);
-    }
-}
-
-impl arg::ReadAll for SettingsConnectionPropertiesChanged {
-    fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
-        Ok(SettingsConnectionPropertiesChanged {
-            properties: i.read()?,
-        })
-    }
-}
-
-impl dbus::message::SignalArgs for SettingsConnectionPropertiesChanged {
-    const NAME: &'static str = "PropertiesChanged";
-    const INTERFACE: &'static str = "org.freedesktop.NetworkManager.Settings.Connection";
-}
-
 impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> SettingsConnection for blocking::Proxy<'a, C> {
 
     fn update(&self, properties: ::std::collections::HashMap<&str, arg::PropMap>) -> Result<(), dbus::Error> {

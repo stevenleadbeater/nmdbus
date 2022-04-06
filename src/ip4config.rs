@@ -20,30 +20,6 @@ pub trait IP4Config {
     fn wins_server_data(&self) -> Result<Vec<String>, dbus::Error>;
 }
 
-#[derive(Debug)]
-pub struct IP4ConfigPropertiesChanged {
-    pub properties: arg::PropMap,
-}
-
-impl arg::AppendAll for IP4ConfigPropertiesChanged {
-    fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.properties, i);
-    }
-}
-
-impl arg::ReadAll for IP4ConfigPropertiesChanged {
-    fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
-        Ok(IP4ConfigPropertiesChanged {
-            properties: i.read()?,
-        })
-    }
-}
-
-impl dbus::message::SignalArgs for IP4ConfigPropertiesChanged {
-    const NAME: &'static str = "PropertiesChanged";
-    const INTERFACE: &'static str = "org.freedesktop.NetworkManager.IP4Config";
-}
-
 impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> IP4Config for blocking::Proxy<'a, C> {
 
     fn addresses(&self) -> Result<Vec<Vec<u32>>, dbus::Error> {

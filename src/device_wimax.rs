@@ -17,30 +17,6 @@ pub trait DeviceWiMax {
 }
 
 #[derive(Debug)]
-pub struct DeviceWiMaxPropertiesChanged {
-    pub properties: arg::PropMap,
-}
-
-impl arg::AppendAll for DeviceWiMaxPropertiesChanged {
-    fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.properties, i);
-    }
-}
-
-impl arg::ReadAll for DeviceWiMaxPropertiesChanged {
-    fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
-        Ok(DeviceWiMaxPropertiesChanged {
-            properties: i.read()?,
-        })
-    }
-}
-
-impl dbus::message::SignalArgs for DeviceWiMaxPropertiesChanged {
-    const NAME: &'static str = "PropertiesChanged";
-    const INTERFACE: &'static str = "org.freedesktop.NetworkManager.Device.WiMax";
-}
-
-#[derive(Debug)]
 pub struct DeviceWiMaxNspAdded {
     pub nsp: dbus::Path<'static>,
 }

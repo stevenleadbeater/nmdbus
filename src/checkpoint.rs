@@ -10,30 +10,6 @@ pub trait Checkpoint {
     fn rollback_timeout(&self) -> Result<u32, dbus::Error>;
 }
 
-#[derive(Debug)]
-pub struct CheckpointPropertiesChanged {
-    pub properties: arg::PropMap,
-}
-
-impl arg::AppendAll for CheckpointPropertiesChanged {
-    fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.properties, i);
-    }
-}
-
-impl arg::ReadAll for CheckpointPropertiesChanged {
-    fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
-        Ok(CheckpointPropertiesChanged {
-            properties: i.read()?,
-        })
-    }
-}
-
-impl dbus::message::SignalArgs for CheckpointPropertiesChanged {
-    const NAME: &'static str = "PropertiesChanged";
-    const INTERFACE: &'static str = "org.freedesktop.NetworkManager.Checkpoint";
-}
-
 impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> Checkpoint for blocking::Proxy<'a, C> {
 
     fn devices(&self) -> Result<Vec<dbus::Path<'static>>, dbus::Error> {

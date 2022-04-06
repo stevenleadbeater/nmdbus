@@ -10,30 +10,6 @@ pub trait VPNConnection {
 }
 
 #[derive(Debug)]
-pub struct VPNConnectionPropertiesChanged {
-    pub properties: arg::PropMap,
-}
-
-impl arg::AppendAll for VPNConnectionPropertiesChanged {
-    fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.properties, i);
-    }
-}
-
-impl arg::ReadAll for VPNConnectionPropertiesChanged {
-    fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
-        Ok(VPNConnectionPropertiesChanged {
-            properties: i.read()?,
-        })
-    }
-}
-
-impl dbus::message::SignalArgs for VPNConnectionPropertiesChanged {
-    const NAME: &'static str = "PropertiesChanged";
-    const INTERFACE: &'static str = "org.freedesktop.NetworkManager.VPN.Connection";
-}
-
-#[derive(Debug)]
 pub struct VPNConnectionVpnStateChanged {
     pub state: u32,
     pub reason: u32,

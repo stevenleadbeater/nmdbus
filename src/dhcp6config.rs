@@ -8,30 +8,6 @@ pub trait DHCP6Config {
     fn options(&self) -> Result<arg::PropMap, dbus::Error>;
 }
 
-#[derive(Debug)]
-pub struct DHCP6ConfigPropertiesChanged {
-    pub properties: arg::PropMap,
-}
-
-impl arg::AppendAll for DHCP6ConfigPropertiesChanged {
-    fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.properties, i);
-    }
-}
-
-impl arg::ReadAll for DHCP6ConfigPropertiesChanged {
-    fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
-        Ok(DHCP6ConfigPropertiesChanged {
-            properties: i.read()?,
-        })
-    }
-}
-
-impl dbus::message::SignalArgs for DHCP6ConfigPropertiesChanged {
-    const NAME: &'static str = "PropertiesChanged";
-    const INTERFACE: &'static str = "org.freedesktop.NetworkManager.DHCP6Config";
-}
-
 impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> DHCP6Config for blocking::Proxy<'a, C> {
 
     fn options(&self) -> Result<arg::PropMap, dbus::Error> {

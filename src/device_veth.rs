@@ -8,30 +8,6 @@ pub trait DeviceVeth {
     fn peer(&self) -> Result<dbus::Path<'static>, dbus::Error>;
 }
 
-#[derive(Debug)]
-pub struct DeviceVethPropertiesChanged {
-    pub properties: arg::PropMap,
-}
-
-impl arg::AppendAll for DeviceVethPropertiesChanged {
-    fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.properties, i);
-    }
-}
-
-impl arg::ReadAll for DeviceVethPropertiesChanged {
-    fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
-        Ok(DeviceVethPropertiesChanged {
-            properties: i.read()?,
-        })
-    }
-}
-
-impl dbus::message::SignalArgs for DeviceVethPropertiesChanged {
-    const NAME: &'static str = "PropertiesChanged";
-    const INTERFACE: &'static str = "org.freedesktop.NetworkManager.Device.Veth";
-}
-
 impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> DeviceVeth for blocking::Proxy<'a, C> {
 
     fn peer(&self) -> Result<dbus::Path<'static>, dbus::Error> {

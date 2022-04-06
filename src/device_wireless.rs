@@ -19,30 +19,6 @@ pub trait DeviceWireless {
 }
 
 #[derive(Debug)]
-pub struct DeviceWirelessPropertiesChanged {
-    pub properties: arg::PropMap,
-}
-
-impl arg::AppendAll for DeviceWirelessPropertiesChanged {
-    fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.properties, i);
-    }
-}
-
-impl arg::ReadAll for DeviceWirelessPropertiesChanged {
-    fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
-        Ok(DeviceWirelessPropertiesChanged {
-            properties: i.read()?,
-        })
-    }
-}
-
-impl dbus::message::SignalArgs for DeviceWirelessPropertiesChanged {
-    const NAME: &'static str = "PropertiesChanged";
-    const INTERFACE: &'static str = "org.freedesktop.NetworkManager.Device.Wireless";
-}
-
-#[derive(Debug)]
 pub struct DeviceWirelessAccessPointAdded {
     pub access_point: dbus::Path<'static>,
 }

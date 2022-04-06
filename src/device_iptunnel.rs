@@ -19,30 +19,6 @@ pub trait DeviceIPTunnel {
     fn flags(&self) -> Result<u32, dbus::Error>;
 }
 
-#[derive(Debug)]
-pub struct DeviceIPTunnelPropertiesChanged {
-    pub properties: arg::PropMap,
-}
-
-impl arg::AppendAll for DeviceIPTunnelPropertiesChanged {
-    fn append(&self, i: &mut arg::IterAppend) {
-        arg::RefArg::append(&self.properties, i);
-    }
-}
-
-impl arg::ReadAll for DeviceIPTunnelPropertiesChanged {
-    fn read(i: &mut arg::Iter) -> Result<Self, arg::TypeMismatchError> {
-        Ok(DeviceIPTunnelPropertiesChanged {
-            properties: i.read()?,
-        })
-    }
-}
-
-impl dbus::message::SignalArgs for DeviceIPTunnelPropertiesChanged {
-    const NAME: &'static str = "PropertiesChanged";
-    const INTERFACE: &'static str = "org.freedesktop.NetworkManager.Device.IPTunnel";
-}
-
 impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> DeviceIPTunnel for blocking::Proxy<'a, C> {
 
     fn mode(&self) -> Result<u32, dbus::Error> {
