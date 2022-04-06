@@ -39,6 +39,7 @@ pub trait Device {
     fn real(&self) -> Result<bool, dbus::Error>;
     fn ip4_connectivity(&self) -> Result<u32, dbus::Error>;
     fn ip6_connectivity(&self) -> Result<u32, dbus::Error>;
+    fn interface_flags(&self) -> Result<u32, dbus::Error>;
 }
 
 #[derive(Debug)]
@@ -199,6 +200,10 @@ impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> Device for
 
     fn ip6_connectivity(&self) -> Result<u32, dbus::Error> {
         <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.Device", "Ip6Connectivity")
+    }
+
+    fn interface_flags(&self) -> Result<u32, dbus::Error> {
+        <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.Device", "InterfaceFlags")
     }
 
     fn set_managed(&self, value: bool) -> Result<(), dbus::Error> {

@@ -9,6 +9,7 @@ pub trait Settings {
     fn get_connection_by_uuid(&self, uuid: &str) -> Result<dbus::Path<'static>, dbus::Error>;
     fn add_connection(&self, connection: ::std::collections::HashMap<&str, arg::PropMap>) -> Result<dbus::Path<'static>, dbus::Error>;
     fn add_connection_unsaved(&self, connection: ::std::collections::HashMap<&str, arg::PropMap>) -> Result<dbus::Path<'static>, dbus::Error>;
+    fn add_connection2(&self, settings: ::std::collections::HashMap<&str, arg::PropMap>, flags: u32, args: arg::PropMap) -> Result<(dbus::Path<'static>, arg::PropMap), dbus::Error>;
     fn load_connections(&self, filenames: Vec<&str>) -> Result<(bool, Vec<String>), dbus::Error>;
     fn reload_connections(&self) -> Result<bool, dbus::Error>;
     fn save_hostname(&self, hostname: &str) -> Result<(), dbus::Error>;
@@ -109,6 +110,10 @@ impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> Settings f
     fn add_connection_unsaved(&self, connection: ::std::collections::HashMap<&str, arg::PropMap>) -> Result<dbus::Path<'static>, dbus::Error> {
         self.method_call("org.freedesktop.NetworkManager.Settings", "AddConnectionUnsaved", (connection, ))
             .and_then(|r: (dbus::Path<'static>, )| Ok(r.0, ))
+    }
+
+    fn add_connection2(&self, settings: ::std::collections::HashMap<&str, arg::PropMap>, flags: u32, args: arg::PropMap) -> Result<(dbus::Path<'static>, arg::PropMap), dbus::Error> {
+        self.method_call("org.freedesktop.NetworkManager.Settings", "AddConnection2", (settings, flags, args, ))
     }
 
     fn load_connections(&self, filenames: Vec<&str>) -> Result<(bool, Vec<String>), dbus::Error> {

@@ -50,6 +50,7 @@ pub trait NetworkManager {
     fn connectivity_check_available(&self) -> Result<bool, dbus::Error>;
     fn connectivity_check_enabled(&self) -> Result<bool, dbus::Error>;
     fn set_connectivity_check_enabled(&self, value: bool) -> Result<(), dbus::Error>;
+    fn connectivity_check_uri(&self) -> Result<String, dbus::Error>;
     fn global_dns_configuration(&self) -> Result<arg::PropMap, dbus::Error>;
     fn set_global_dns_configuration(&self, value: arg::PropMap) -> Result<(), dbus::Error>;
 }
@@ -344,6 +345,10 @@ impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> NetworkMan
 
     fn connectivity_check_enabled(&self) -> Result<bool, dbus::Error> {
         <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager", "ConnectivityCheckEnabled")
+    }
+
+    fn connectivity_check_uri(&self) -> Result<String, dbus::Error> {
+        <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager", "ConnectivityCheckUri")
     }
 
     fn global_dns_configuration(&self) -> Result<arg::PropMap, dbus::Error> {
