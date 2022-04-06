@@ -1,0 +1,112 @@
+// this can probably replaced with a bash script
+
+fn help() {
+	print([
+		"to build the bindings use:",
+		"- download_dependencies",
+		"- build_bindings <version>"
+	]);
+}
+
+fn download_dependencies() {
+	let apt = cmd(["sudo", "apt", "install", "wget", "tar"]);
+	apt.execute();
+	let cargo = cmd(["cargo", "install", "dbus-codegen"]);
+	cargo.execute();
+}
+
+fn build_bindings() {
+	print("you need to specify a version format: 1.37.3");
+}
+
+fn build_bindings(version) {
+	clean();
+
+	let tar_file = "target/nm-" + version + ".tar.xz";
+	// download release file
+	let short_version_reg = regex("\\d+.\\d+");
+	let short_version = short_version_reg.find(version);
+	let wget = cmd([
+		"wget",
+		"-O", tar_file,
+		"https://download.gnome.org/sources/NetworkManager/" + short_version +
+		"/NetworkManager-" + version + ".tar.xz"
+	]);
+	wget.execute();
+
+	// extract the tar
+	let folder = "target/nm-" + version;
+	fs::delete(folder);
+	fs::create_dir(folder);
+	let tar = cmd(["tar", "-xf", tar_file, "-C", folder]);
+	tar.execute();
+
+	let inner_folder = folder + "/NetworkManager-" + version;
+	let xml_folder = inner_folder + "/introspection";
+
+	let meson_file = xml_folder + "/meson.build";
+
+	let files = [];
+
+	if fs::is_file(meson_file) {
+
+		let meson_ctn = fs::read(meson_file);
+
+		// ('[a-zA-Z0-9.]*')*
+		let meson_build_ifaces = regex("'(org\\.freedesktop\\.[a-zA-Z0-9.]+)'");
+		let captures = meson_build_ifaces.captures_all(meson_ctn);
+
+		for capt in captures {
+			files.push(capt[1] + ".xml");
+		}
+
+	} else {
+		files = fs::read_dir(xml_folder);
+	}
+
+	let short_name_regex = regex("org.freedesktop.NetworkManager.([a-zA-Z0-9.]+).xml");
+	let replace_dot = regex("\\.");
+	let shorten_type_space = regex("OrgFreedesktopNetworkManager\\s");
+	let shorten_type = regex("OrgFreedesktopNetworkManager");
+
+	let lib_ctn = "//! dbus types for the NetworkManager api\n";
+	lib_ctn += "//! with the version " + version + "\n";
+	lib_ctn += "pub use dbus;\n";
+
+	for file in files {
+		let short_name;
+		if file == "org.freedesktop.NetworkManager.xml" {
+			short_name = "NetworkManager";
+		} else {
+			short_name = short_name_regex.captures(file)[1];
+		}
+		short_name = replace_dot.replace(short_name, "_");
+		short_name = lowercase(short_name);
+
+		let codegen = cmd([
+			"dbus-codegen-rust",
+			"-c", "blocking",
+			"--file", xml_folder + "/" + file
+		]);
+		let rust = codegen.output();
+		rust = shorten_type_space.replace(rust, "NetworkManager ");
+		rust = shorten_type.replace(rust, "");
+		fs::write("src/" + short_name + ".rs", rust);
+
+		if short_name == "networkmanager" {
+			lib_ctn += "mod networkmanager;\n";
+			lib_ctn += "pub use networkmanager::*;\n";
+		} else {
+			lib_ctn += "pub mod " + short_name + ";\n";
+		}
+	}
+
+	fs::write("src/lib.rs", lib_ctn);
+}
+
+fn clean() {
+	fs::delete("./src");
+	fs::create_dir("./src");
+	// let rm = cmd(["bash", "-c", "rm src/networkmanager* -f"]);
+	// rm.execute();
+}
