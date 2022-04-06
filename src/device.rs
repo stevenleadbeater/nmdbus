@@ -10,6 +10,7 @@ pub trait Device {
     fn disconnect(&self) -> Result<(), dbus::Error>;
     fn delete(&self) -> Result<(), dbus::Error>;
     fn udi(&self) -> Result<String, dbus::Error>;
+    fn path(&self) -> Result<String, dbus::Error>;
     fn interface(&self) -> Result<String, dbus::Error>;
     fn ip_interface(&self) -> Result<String, dbus::Error>;
     fn driver(&self) -> Result<String, dbus::Error>;
@@ -40,6 +41,7 @@ pub trait Device {
     fn ip4_connectivity(&self) -> Result<u32, dbus::Error>;
     fn ip6_connectivity(&self) -> Result<u32, dbus::Error>;
     fn interface_flags(&self) -> Result<u32, dbus::Error>;
+    fn hw_address(&self) -> Result<String, dbus::Error>;
 }
 
 #[derive(Debug)]
@@ -92,6 +94,10 @@ impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> Device for
 
     fn udi(&self) -> Result<String, dbus::Error> {
         <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.Device", "Udi")
+    }
+
+    fn path(&self) -> Result<String, dbus::Error> {
+        <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.Device", "Path")
     }
 
     fn interface(&self) -> Result<String, dbus::Error> {
@@ -204,6 +210,10 @@ impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> Device for
 
     fn interface_flags(&self) -> Result<u32, dbus::Error> {
         <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.Device", "InterfaceFlags")
+    }
+
+    fn hw_address(&self) -> Result<String, dbus::Error> {
+        <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.Device", "HwAddress")
     }
 
     fn set_managed(&self, value: bool) -> Result<(), dbus::Error> {

@@ -1,5 +1,5 @@
 //! dbus types for the NetworkManager api
-//! with the version 1.22.16
+//! with the version 1.26.8
 pub use dbus;
 pub mod accesspoint;
 pub mod agentmanager;
@@ -29,6 +29,7 @@ pub mod device_team;
 pub mod device_tun;
 pub mod device_veth;
 pub mod device_vlan;
+pub mod device_vrf;
 pub mod device_vxlan;
 pub mod device_wimax;
 pub mod device_wifip2p;
