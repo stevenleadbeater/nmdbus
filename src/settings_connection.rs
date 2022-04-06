@@ -14,6 +14,8 @@ pub trait SettingsConnection {
     fn save(&self) -> Result<(), dbus::Error>;
     fn update2(&self, settings: ::std::collections::HashMap<&str, arg::PropMap>, flags: u32, args: arg::PropMap) -> Result<arg::PropMap, dbus::Error>;
     fn unsaved(&self) -> Result<bool, dbus::Error>;
+    fn flags(&self) -> Result<u32, dbus::Error>;
+    fn filename(&self) -> Result<String, dbus::Error>;
 }
 
 #[derive(Debug)]
@@ -121,5 +123,13 @@ impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> SettingsCo
 
     fn unsaved(&self) -> Result<bool, dbus::Error> {
         <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.Settings.Connection", "Unsaved")
+    }
+
+    fn flags(&self) -> Result<u32, dbus::Error> {
+        <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.Settings.Connection", "Flags")
+    }
+
+    fn filename(&self) -> Result<String, dbus::Error> {
+        <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.Settings.Connection", "Filename")
     }
 }

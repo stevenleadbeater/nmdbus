@@ -16,6 +16,7 @@ pub trait DeviceIPTunnel {
     fn output_key(&self) -> Result<String, dbus::Error>;
     fn encapsulation_limit(&self) -> Result<u8, dbus::Error>;
     fn flow_label(&self) -> Result<u32, dbus::Error>;
+    fn flags(&self) -> Result<u32, dbus::Error>;
 }
 
 #[derive(Debug)]
@@ -86,5 +87,9 @@ impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> DeviceIPTu
 
     fn flow_label(&self) -> Result<u32, dbus::Error> {
         <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.Device.IPTunnel", "FlowLabel")
+    }
+
+    fn flags(&self) -> Result<u32, dbus::Error> {
+        <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.Device.IPTunnel", "Flags")
     }
 }

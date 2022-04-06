@@ -11,11 +11,13 @@ pub trait IP4Config {
     fn routes(&self) -> Result<Vec<Vec<u32>>, dbus::Error>;
     fn route_data(&self) -> Result<Vec<arg::PropMap>, dbus::Error>;
     fn nameservers(&self) -> Result<Vec<u32>, dbus::Error>;
+    fn nameserver_data(&self) -> Result<Vec<arg::PropMap>, dbus::Error>;
     fn domains(&self) -> Result<Vec<String>, dbus::Error>;
     fn searches(&self) -> Result<Vec<String>, dbus::Error>;
     fn dns_options(&self) -> Result<Vec<String>, dbus::Error>;
     fn dns_priority(&self) -> Result<i32, dbus::Error>;
     fn wins_servers(&self) -> Result<Vec<u32>, dbus::Error>;
+    fn wins_server_data(&self) -> Result<Vec<String>, dbus::Error>;
 }
 
 #[derive(Debug)]
@@ -68,6 +70,10 @@ impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> IP4Config 
         <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.IP4Config", "Nameservers")
     }
 
+    fn nameserver_data(&self) -> Result<Vec<arg::PropMap>, dbus::Error> {
+        <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.IP4Config", "NameserverData")
+    }
+
     fn domains(&self) -> Result<Vec<String>, dbus::Error> {
         <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.IP4Config", "Domains")
     }
@@ -86,5 +92,9 @@ impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> IP4Config 
 
     fn wins_servers(&self) -> Result<Vec<u32>, dbus::Error> {
         <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.IP4Config", "WinsServers")
+    }
+
+    fn wins_server_data(&self) -> Result<Vec<String>, dbus::Error> {
+        <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.IP4Config", "WinsServerData")
     }
 }

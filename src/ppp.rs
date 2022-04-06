@@ -9,6 +9,7 @@ pub trait PPP {
     fn set_ip4_config(&self, config: arg::PropMap) -> Result<(), dbus::Error>;
     fn set_ip6_config(&self, config: arg::PropMap) -> Result<(), dbus::Error>;
     fn set_state(&self, state: u32) -> Result<(), dbus::Error>;
+    fn set_ifindex(&self, ifindex: i32) -> Result<(), dbus::Error>;
 }
 
 impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> PPP for blocking::Proxy<'a, C> {
@@ -27,5 +28,9 @@ impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> PPP for bl
 
     fn set_state(&self, state: u32) -> Result<(), dbus::Error> {
         self.method_call("org.freedesktop.NetworkManager.PPP", "SetState", (state, ))
+    }
+
+    fn set_ifindex(&self, ifindex: i32) -> Result<(), dbus::Error> {
+        self.method_call("org.freedesktop.NetworkManager.PPP", "SetIfindex", (ifindex, ))
     }
 }

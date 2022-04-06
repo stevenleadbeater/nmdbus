@@ -15,6 +15,7 @@ pub trait DeviceWireless {
     fn access_points(&self) -> Result<Vec<dbus::Path<'static>>, dbus::Error>;
     fn active_access_point(&self) -> Result<dbus::Path<'static>, dbus::Error>;
     fn wireless_capabilities(&self) -> Result<u32, dbus::Error>;
+    fn last_scan(&self) -> Result<i64, dbus::Error>;
 }
 
 #[derive(Debug)]
@@ -131,5 +132,9 @@ impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> DeviceWire
 
     fn wireless_capabilities(&self) -> Result<u32, dbus::Error> {
         <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.Device.Wireless", "WirelessCapabilities")
+    }
+
+    fn last_scan(&self) -> Result<i64, dbus::Error> {
+        <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.Device.Wireless", "LastScan")
     }
 }

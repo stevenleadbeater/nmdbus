@@ -22,8 +22,10 @@ pub trait NetworkManager {
     fn checkpoint_create(&self, devices: Vec<dbus::Path>, rollback_timeout: u32, flags: u32) -> Result<dbus::Path<'static>, dbus::Error>;
     fn checkpoint_destroy(&self, checkpoint: dbus::Path) -> Result<(), dbus::Error>;
     fn checkpoint_rollback(&self, checkpoint: dbus::Path) -> Result<::std::collections::HashMap<String, u32>, dbus::Error>;
+    fn checkpoint_adjust_rollback_timeout(&self, checkpoint: dbus::Path, add_timeout: u32) -> Result<(), dbus::Error>;
     fn devices(&self) -> Result<Vec<dbus::Path<'static>>, dbus::Error>;
     fn all_devices(&self) -> Result<Vec<dbus::Path<'static>>, dbus::Error>;
+    fn checkpoints(&self) -> Result<Vec<dbus::Path<'static>>, dbus::Error>;
     fn networking_enabled(&self) -> Result<bool, dbus::Error>;
     fn wireless_enabled(&self) -> Result<bool, dbus::Error>;
     fn set_wireless_enabled(&self, value: bool) -> Result<(), dbus::Error>;
@@ -247,12 +249,20 @@ impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> NetworkMan
             .and_then(|r: (::std::collections::HashMap<String, u32>, )| Ok(r.0, ))
     }
 
+    fn checkpoint_adjust_rollback_timeout(&self, checkpoint: dbus::Path, add_timeout: u32) -> Result<(), dbus::Error> {
+        self.method_call("org.freedesktop.NetworkManager", "CheckpointAdjustRollbackTimeout", (checkpoint, add_timeout, ))
+    }
+
     fn devices(&self) -> Result<Vec<dbus::Path<'static>>, dbus::Error> {
         <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager", "Devices")
     }
 
     fn all_devices(&self) -> Result<Vec<dbus::Path<'static>>, dbus::Error> {
         <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager", "AllDevices")
+    }
+
+    fn checkpoints(&self) -> Result<Vec<dbus::Path<'static>>, dbus::Error> {
+        <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager", "Checkpoints")
     }
 
     fn networking_enabled(&self) -> Result<bool, dbus::Error> {

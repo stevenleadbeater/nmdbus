@@ -1,5 +1,5 @@
 //! dbus types for the NetworkManager api
-//! with the version 1.10.14
+//! with the version 1.14.6
 pub use dbus;
 pub mod accesspoint;
 pub mod agentmanager;
@@ -15,6 +15,7 @@ pub mod device_dummy;
 pub mod device_generic;
 pub mod device_iptunnel;
 pub mod device_infiniband;
+pub mod device_lowpan;
 pub mod device_macsec;
 pub mod device_macvlan;
 pub mod device_modem;
@@ -30,8 +31,10 @@ pub mod device_veth;
 pub mod device_vlan;
 pub mod device_vxlan;
 pub mod device_wimax;
+pub mod device_wireguard;
 pub mod device_wired;
 pub mod device_wireless;
+pub mod device_wpan;
 pub mod device;
 pub mod dnsmanager;
 pub mod ip4config;
