@@ -1,5 +1,5 @@
 //! dbus types for the NetworkManager api
-//! with the version 1.33.90
+//! with the version 1.37.3
 pub use dbus;
 pub mod accesspoint;
 pub mod agentmanager;
