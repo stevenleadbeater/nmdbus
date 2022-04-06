@@ -1,6 +1,6 @@
 [package]
 name = "nmdbus"
-description = "Get every info about your linux system."
+description = "Dbus bindings to the network manager."
 version = "1.37.3"
 authors = ["Sören Meier <soeren@s-me.ch>"]
 repository = "https://github.com/soerenmeier/nmdbus"

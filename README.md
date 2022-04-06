@@ -2,7 +2,7 @@
 [![docs.rs](https://img.shields.io/docsrs/nmdbus)](https://docs.rs/nmdbus/)
 
 ## Network manager dbus api
-Dbus bindingings to the network manager.
+Dbus bindings to the network manager.
 
 Every version corresponds to the NetworkManager version [Releases](https://download.gnome.org/sources/NetworkManager/).
 
