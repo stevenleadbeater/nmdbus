@@ -11,6 +11,7 @@ pub trait NetworkManager {
     fn get_device_by_ip_iface(&self, iface: &str) -> Result<dbus::Path<'static>, dbus::Error>;
     fn activate_connection(&self, connection: dbus::Path, device: dbus::Path, specific_object: dbus::Path) -> Result<dbus::Path<'static>, dbus::Error>;
     fn add_and_activate_connection(&self, connection: ::std::collections::HashMap<&str, arg::PropMap>, device: dbus::Path, specific_object: dbus::Path) -> Result<(dbus::Path<'static>, dbus::Path<'static>), dbus::Error>;
+    fn add_and_activate_connection2(&self, connection: ::std::collections::HashMap<&str, arg::PropMap>, device: dbus::Path, specific_object: dbus::Path, options: arg::PropMap) -> Result<(dbus::Path<'static>, dbus::Path<'static>, arg::PropMap), dbus::Error>;
     fn deactivate_connection(&self, active_connection: dbus::Path) -> Result<(), dbus::Error>;
     fn sleep(&self, sleep: bool) -> Result<(), dbus::Error>;
     fn enable(&self, enable: bool) -> Result<(), dbus::Error>;
@@ -198,6 +199,10 @@ impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> NetworkMan
 
     fn add_and_activate_connection(&self, connection: ::std::collections::HashMap<&str, arg::PropMap>, device: dbus::Path, specific_object: dbus::Path) -> Result<(dbus::Path<'static>, dbus::Path<'static>), dbus::Error> {
         self.method_call("org.freedesktop.NetworkManager", "AddAndActivateConnection", (connection, device, specific_object, ))
+    }
+
+    fn add_and_activate_connection2(&self, connection: ::std::collections::HashMap<&str, arg::PropMap>, device: dbus::Path, specific_object: dbus::Path, options: arg::PropMap) -> Result<(dbus::Path<'static>, dbus::Path<'static>, arg::PropMap), dbus::Error> {
+        self.method_call("org.freedesktop.NetworkManager", "AddAndActivateConnection2", (connection, device, specific_object, options, ))
     }
 
     fn deactivate_connection(&self, active_connection: dbus::Path) -> Result<(), dbus::Error> {

@@ -1,5 +1,5 @@
 //! dbus types for the NetworkManager api
-//! with the version 1.14.6
+//! with the version 1.18.10
 pub use dbus;
 pub mod accesspoint;
 pub mod agentmanager;
@@ -31,6 +31,7 @@ pub mod device_veth;
 pub mod device_vlan;
 pub mod device_vxlan;
 pub mod device_wimax;
+pub mod device_wifip2p;
 pub mod device_wireguard;
 pub mod device_wired;
 pub mod device_wireless;
@@ -46,5 +47,6 @@ pub mod settings;
 pub mod vpn_connection;
 pub mod vpn_plugin;
 pub mod wimax_nsp;
+pub mod wifip2ppeer;
 mod networkmanager;
 pub use networkmanager::*;

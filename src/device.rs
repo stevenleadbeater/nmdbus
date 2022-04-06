@@ -37,6 +37,8 @@ pub trait Device {
     fn metered(&self) -> Result<u32, dbus::Error>;
     fn lldp_neighbors(&self) -> Result<Vec<arg::PropMap>, dbus::Error>;
     fn real(&self) -> Result<bool, dbus::Error>;
+    fn ip4_connectivity(&self) -> Result<u32, dbus::Error>;
+    fn ip6_connectivity(&self) -> Result<u32, dbus::Error>;
 }
 
 #[derive(Debug)]
@@ -189,6 +191,14 @@ impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> Device for
 
     fn real(&self) -> Result<bool, dbus::Error> {
         <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.Device", "Real")
+    }
+
+    fn ip4_connectivity(&self) -> Result<u32, dbus::Error> {
+        <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.Device", "Ip4Connectivity")
+    }
+
+    fn ip6_connectivity(&self) -> Result<u32, dbus::Error> {
+        <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.Device", "Ip6Connectivity")
     }
 
     fn set_managed(&self, value: bool) -> Result<(), dbus::Error> {
