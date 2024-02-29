@@ -44,6 +44,8 @@ pub trait Device {
     fn hw_address(&self) -> Result<String, dbus::Error>;
     fn ports(&self) -> Result<Vec<dbus::Path<'static>>, dbus::Error>;
     fn device_statistics(&self) -> Result<dbus::Path<'static>, dbus::Error>;
+    fn rx_bytes(&self) -> Result<u64, dbus::Error>;
+    fn tx_bytes(&self) -> Result<u64, dbus::Error>;
 }
 
 #[derive(Debug)]
@@ -230,7 +232,12 @@ impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> Device for
         <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::set(&self, "org.freedesktop.NetworkManager.Device", "Autoconnect", value)
     }
     fn device_statistics(&self) -> Result<dbus::Path<'static>, dbus::Error> {
-        <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.Device", "DeviceStatistics")
+        <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.Device", "Statistics")
     }
-
+    fn rx_bytes(&self) -> Result<u64, dbus::Error> {
+        <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.Device.Statistics", "RxBytes")
+    }
+    fn tx_bytes(&self) -> Result<u64, dbus::Error> {
+        <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.Device.Statistics", "TxBytes")
+    }
 }
