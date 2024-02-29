@@ -43,6 +43,7 @@ pub trait Device {
     fn interface_flags(&self) -> Result<u32, dbus::Error>;
     fn hw_address(&self) -> Result<String, dbus::Error>;
     fn ports(&self) -> Result<Vec<dbus::Path<'static>>, dbus::Error>;
+    fn device_statistics(&self) -> Result<dbus::Path<'static>, dbus::Error>;
 }
 
 #[derive(Debug)]
@@ -228,4 +229,8 @@ impl<'a, T: blocking::BlockingSender, C: ::std::ops::Deref<Target=T>> Device for
     fn set_autoconnect(&self, value: bool) -> Result<(), dbus::Error> {
         <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::set(&self, "org.freedesktop.NetworkManager.Device", "Autoconnect", value)
     }
+    fn device_statistics(&self) -> Result<dbus::Path<'static>, dbus::Error> {
+        <Self as blocking::stdintf::org_freedesktop_dbus::Properties>::get(&self, "org.freedesktop.NetworkManager.Device", "DeviceStatistics")
+    }
+
 }
